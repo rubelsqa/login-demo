@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .login-container, .register-container { margin: 0 auto; width: 300px; padding: 20px; border: 1px solid #000; }
+    .error { color: red; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>Login</h2>
+  <p id="login-error" class="error hidden"></p>
+  <input id="username" type="text" placeholder="Username">
+  <br>
+  <input id="password" type="password" placeholder="Password">
+  <br>
+  <button onclick="login()">Login</button>
+  <br>
+  <button onclick="showRegister()">Register</button>
+</div>
+
+<div id="register-container" class="register-container hidden">
+  <h2>Register</h2>
+  <p id="register-error" class="error hidden"></p>
+  <input id="register-username" type="text" placeholder="Username">
+  <br>
+  <input id="register-password" type="password" placeholder="Password">
+  <br>
+  <input id="register-phone" type="text" placeholder="Phone number">
+  <br>
+  <button onclick="register()">Register</button>
+  <button onclick="backToLogin()">Back</button>
+</div>
+
+<script>
+  let users = [];
+
+  function login() {
+    clearError('login-error');
+
+    let username = document.getElementById('username').value;
+    let password = document.getElementById('password').value;
+    let user = users.find(u => u.username === username);
+    
+    if (!user) {
+      showError('User does not exist', 'login-error');
+      return;
+    }
+    
+    if (user.password !== password) {
+      showError('Incorrect password', 'login-error');
+      return;
+    }
+    
+    alert('Logged in successfully');
+  }
+
+  function clearError(errorElementId) {
+    let errorElement = document.getElementById(errorElementId);
+    errorElement.textContent = '';
+    errorElement.classList.add('hidden');
+  }
+  
+  function showError(message, errorElementId) {
+    let errorElement = document.getElementById(errorElementId);
+    errorElement.textContent = message;
+    errorElement.classList.remove('hidden');
+  }
+
+  function showRegister() {
+    clearError('register-error');
+    document.querySelector('.login-container').style.display = 'none';
+    document.querySelector('.register-container').style.display = 'block';
+  }
+
+  function backToLogin() {
+    clearError('login-error');
+    document.querySelector('.login-container').style.display = 'block';
+    document.querySelector('.register-container').style.display = 'none';
+  }
+
+  function register() {
+    clearError('register-error');
+
+    let username = document.getElementById('register-username').value;
+    let password = document.getElementById('register-password').value;
+    let phone = document.getElementById('register-phone').value;
+
+    if (!username || !password || !phone) {
+      showError('All fields are required', 'register-error');
+      return;
+    }
+
+    if (users.find(u => u.username === username)) {
+      showError('Username already taken', 'register-error');
+      return;
+    }
+    
+    users.push({username, password, phone});
+    
+    alert('Registered successfully');
+    document.querySelector('.login-container').style.display = 'block';
+    document.querySelector('.register-container').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
